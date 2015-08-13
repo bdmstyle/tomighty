@@ -51,6 +51,8 @@ public class PixelUtils {
 
 	/**
 	 * Clamp a value to the range 0..255
+	 * @param c
+	 * @return range of 0 to 255 
 	 */
 	public static int clamp(int c) {
 		if (c < 0)

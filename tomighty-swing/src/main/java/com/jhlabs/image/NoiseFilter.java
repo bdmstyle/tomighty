@@ -44,9 +44,7 @@ public class NoiseFilter extends PointFilter {
 
 	/**
 	 * Set the amount of effect.
-	 * @param amount the amount
-     * @min-value 0
-     * @max-value 1
+	 * @param amount the amount min-value 0 max-value 1
      * @see #getAmount
 	 */
 	public void setAmount(int amount) {
