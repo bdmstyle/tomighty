@@ -7,7 +7,9 @@ import org.tomighty.time.Time;
  */
 public class ResumedPomodoro extends Pomodoro {
     @Override
-    protected Time initialTime() {
-        return timer.getInterruptedTime();
+    public void afterRendering() {
+        Time time = timer.getInterruptedTime();
+        remainingTime.setText(time.toString());
+        timer.start(time, phase());
     }
 }

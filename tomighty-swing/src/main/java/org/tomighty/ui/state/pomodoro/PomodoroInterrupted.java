@@ -16,30 +16,47 @@
 
 package org.tomighty.ui.state.pomodoro;
 
-import java.awt.Component;
+import java.awt.*;
 
 import javax.inject.Inject;
 import javax.swing.Action;
 
+import org.tomighty.Phase;
+import org.tomighty.bus.messages.timer.TimerInterrupted;
+import org.tomighty.bus.messages.timer.TimerTick;
+import org.tomighty.bus.messages.ui.UiStateChanged;
 import org.tomighty.time.Timer;
+import org.tomighty.ui.state.InterruptedSupport;
 import org.tomighty.ui.state.ToState;
 import org.tomighty.ui.state.UiStateSupport;
 import org.tomighty.ui.state.breaks.LongBreak;
 import org.tomighty.ui.state.breaks.ShortBreak;
+import org.tomighty.ui.theme.Colors;
+import org.tomighty.ui.theme.colors.Gray;
+import org.tomighty.ui.theme.colors.Red;
 
-public class PomodoroInterrupted extends UiStateSupport {
+import static javax.swing.SwingUtilities.invokeLater;
 
-    @Inject
-    protected Timer timer;
+public class PomodoroInterrupted extends InterruptedSupport {
+
+    @Override
+    protected Phase phase() {
+        return Phase.POMODORO;
+    }
 
     @Override
     protected String title() {
-        return null;
+        return "Paused";
+    }
+
+    @Override
+    protected boolean displaysGauge() {
+        return true;
     }
 
     @Override
     protected Component createContent() {
-        return labelFactory.medium(messages.get("Pomodoro paused (" + timer.getInterruptedTime() + ")"));
+        return labelFactory.big(timer.getInterruptedTime().toString());
     }
 
     @Override

@@ -19,7 +19,7 @@ package org.tomighty.bus.messages.timer;
 import org.tomighty.Phase;
 import org.tomighty.time.Time;
 
-public class TimerInterrupted extends TimerStopped {
+public class TimerInterrupted extends TimerTick {
     
     public TimerInterrupted(Time time, Phase phase) {
         super(time, phase);

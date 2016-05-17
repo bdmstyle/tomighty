@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.swing.Action;
 
 import org.tomighty.Phase;
+import org.tomighty.bus.messages.timer.TimerTick;
 import org.tomighty.config.Options;
 import org.tomighty.time.Time;
 import org.tomighty.ui.UiState;
@@ -30,16 +31,18 @@ import org.tomighty.ui.state.breaks.ShortBreak;
 import org.tomighty.ui.theme.Colors;
 import org.tomighty.ui.theme.colors.Red;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 public class Pomodoro extends TimerSupport {
 
 	@Inject
     private Options options;
-	
+
 	@Override
 	public Colors colors() {
 		return Red.instance();
 	}
-	
+
 	@Override
 	protected String title() {
 		return messages.get("Pomodoro");

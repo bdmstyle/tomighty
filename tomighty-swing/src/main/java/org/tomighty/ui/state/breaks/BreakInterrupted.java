@@ -20,11 +20,20 @@ import java.awt.Component;
 
 import javax.swing.Action;
 
+import org.tomighty.Phase;
+import org.tomighty.ui.state.InterruptedSupport;
 import org.tomighty.ui.state.ToState;
 import org.tomighty.ui.state.UiStateSupport;
 import org.tomighty.ui.state.pomodoro.Pomodoro;
+import org.tomighty.ui.theme.Colors;
+import org.tomighty.ui.theme.colors.Gray;
 
-public class BreakInterrupted extends UiStateSupport {
+public class BreakInterrupted extends InterruptedSupport {
+
+	@Override
+	protected Phase phase() {
+		return Phase.BREAK;
+	}
 
 	@Override
 	protected String title() {

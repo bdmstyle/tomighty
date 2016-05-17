@@ -40,84 +40,97 @@ import org.tomighty.ui.UiState;
 
 public abstract class TimerSupport extends UiStateSupport {
 
-	@Inject protected Timer timer;
-	@Inject private Sounds sounds;
-	@Inject private SoundPlayer soundPlayer;
-	private JLabel remainingTime;
-	private UpdateTime updateTime = new UpdateTime();
-	private EndTimer endTimer = new EndTimer();
+    @Inject
+    protected Timer timer;
+    @Inject
+    private Sounds sounds;
+    @Inject
+    private SoundPlayer soundPlayer;
+    protected JLabel remainingTime;
+    private UpdateTime updateTime = new UpdateTime();
+    private EndTimer endTimer = new EndTimer();
 
-	protected abstract Time initialTime();
+    protected abstract Time initialTime();
+
     protected abstract Phase phase();
-	protected abstract Class<? extends UiState> finishedState();
-	protected abstract Class<? extends UiState> interruptedState();
+
+    protected abstract Class<? extends UiState> finishedState();
+
+    protected abstract Class<? extends UiState> interruptedState();
 
     @PostConstruct
-	public void initialize() {
-		bus.subscribe(updateTime, TimerTick.class);
-		bus.subscribe(endTimer, TimerFinished.class);
-	}
-	
-	@Override
-	protected Component createContent() {
-		remainingTime = labelFactory.big();
-		return remainingTime;
-	}
-	
-	@Override
-	public void afterRendering() {
-		Time time = initialTime();
-		remainingTime.setText(time.toString());
-		timer.start(time, phase());
-		soundPlayer.play(sounds.wind()).playRepeatedly(sounds.tictac());
-	}
+    public void initialize() {
+        bus.subscribe(updateTime, TimerTick.class);
+        bus.subscribe(endTimer, TimerFinished.class);
+    }
 
     @Override
-	public void beforeDetaching() {
-		soundPlayer.stop(sounds.tictac());
-		bus.unsubscribe(updateTime, TimerTick.class);
-		bus.unsubscribe(endTimer, TimerFinished.class);
-	}
+    protected Component createContent() {
+        remainingTime = labelFactory.big();
+        return remainingTime;
+    }
 
-	@Override
-	protected Action[] primaryActions() {
-		return new Action[] {
-			new Interrupt()
-		};
-	}
+    @Override
+    public void afterRendering() {
+        Time time = initialTime();
+        remainingTime.setText(time.toString());
+        timer.start(time, phase());
+        soundPlayer.play(sounds.wind()).playRepeatedly(sounds.tictac());
+        invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                // Forces showing time in tray immediately.
+                bus.publish(new TimerTick(initialTime(), phase()));
+            }
+        });
+    }
 
-	@SuppressWarnings("serial")
-	private class Interrupt extends AbstractAction {
-		public Interrupt() {
-			super(messages.get("Pause"));
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			timer.interrupt();
-			bus.publish(new ChangeUiState(interruptedState()));
-		}
-	}
-	
-	private class UpdateTime implements Subscriber<TimerTick> {
-		@Override
-		public void receive(TimerTick tick) {
-			final Time time = tick.getTime();
-			invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					remainingTime.setText(time.toString());
-				}
-			});
-		}
-	}
-	
-	private class EndTimer implements Subscriber<TimerFinished> {
-		@Override
-		public void receive(TimerFinished end) {
-			soundPlayer.play(sounds.ding());
-			bus.publish(new ChangeUiState(finishedState()));
-		}
-	}
+    @Override
+    public void beforeDetaching() {
+        soundPlayer.stop(sounds.tictac());
+        bus.unsubscribe(updateTime, TimerTick.class);
+        bus.unsubscribe(endTimer, TimerFinished.class);
+    }
+
+    @Override
+    protected Action[] primaryActions() {
+        return new Action[]{
+                new Interrupt()
+        };
+    }
+
+    @SuppressWarnings("serial")
+    private class Interrupt extends AbstractAction {
+        public Interrupt() {
+            super(messages.get("Pause"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timer.interrupt();
+            bus.publish(new ChangeUiState(interruptedState()));
+        }
+    }
+
+    private class UpdateTime implements Subscriber<TimerTick> {
+        @Override
+        public void receive(TimerTick tick) {
+            final Time time = tick.getTime();
+            invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    remainingTime.setText(time.toString());
+                }
+            });
+        }
+    }
+
+    private class EndTimer implements Subscriber<TimerFinished> {
+        @Override
+        public void receive(TimerFinished end) {
+            soundPlayer.play(sounds.ding());
+            bus.publish(new ChangeUiState(finishedState()));
+        }
+    }
 
 }
