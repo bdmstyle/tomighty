@@ -40,7 +40,7 @@ import org.tomighty.ui.UiState;
 
 public abstract class TimerSupport extends UiStateSupport {
 
-	@Inject private Timer timer;
+	@Inject protected Timer timer;
 	@Inject private Sounds sounds;
 	@Inject private SoundPlayer soundPlayer;
 	private JLabel remainingTime;
@@ -89,7 +89,7 @@ public abstract class TimerSupport extends UiStateSupport {
 	@SuppressWarnings("serial")
 	private class Interrupt extends AbstractAction {
 		public Interrupt() {
-			super(messages.get("Interrupt"));
+			super(messages.get("Pause"));
 		}
 		
 		@Override

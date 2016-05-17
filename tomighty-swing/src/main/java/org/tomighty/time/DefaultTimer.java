@@ -35,6 +35,8 @@ public class DefaultTimer implements Timer {
     private java.util.Timer timer;
     private final Bus bus;
 
+    private Time interruptedTime;
+
     @Inject
     public DefaultTimer(Bus bus) {
         this.bus = bus;
@@ -51,10 +53,16 @@ public class DefaultTimer implements Timer {
     @Override
 	public void interrupt() {
 		if(timer != null) {
+            interruptedTime = state.getTime();
 			timer.cancel();
 			bus.publish(new TimerInterrupted(state.getTime(), state.getPhase()));
 		}
 	}
+
+    @Override
+    public Time getInterruptedTime() {
+        return interruptedTime;
+    }
 
     private void scheduleTimer() {
         timer = new java.util.Timer(getClass().getSimpleName());

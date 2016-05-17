@@ -18,8 +18,10 @@ package org.tomighty.ui.state.pomodoro;
 
 import java.awt.Component;
 
+import javax.inject.Inject;
 import javax.swing.Action;
 
+import org.tomighty.time.Timer;
 import org.tomighty.ui.state.ToState;
 import org.tomighty.ui.state.UiStateSupport;
 import org.tomighty.ui.state.breaks.LongBreak;
@@ -27,29 +29,33 @@ import org.tomighty.ui.state.breaks.ShortBreak;
 
 public class PomodoroInterrupted extends UiStateSupport {
 
-	@Override
-	protected String title() {
-		return null;
-	}
+    @Inject
+    protected Timer timer;
 
-	@Override
-	protected Component createContent() {
-		return labelFactory.medium(messages.get("Pomodoro interrupted"));
-	}
+    @Override
+    protected String title() {
+        return null;
+    }
 
-	@Override
-	protected Action[] primaryActions() {
-		return new Action[] {
-			new ToState(messages.get("Restart"), Pomodoro.class)
-		};
-	}
+    @Override
+    protected Component createContent() {
+        return labelFactory.medium(messages.get("Pomodoro paused (" + timer.getInterruptedTime() + ")"));
+    }
 
-	@Override
-	protected Action[] secondaryActions() {
-		return new Action[] {
-			new ToState(messages.get("Short break"), ShortBreak.class),
-			new ToState(messages.get("Long break"), LongBreak.class)
-		};
-	}
+    @Override
+    protected Action[] primaryActions() {
+        return new Action[]{
+                new ToState(messages.get("Resume"), ResumedPomodoro.class)
+        };
+    }
+
+    @Override
+    protected Action[] secondaryActions() {
+        return new Action[]{
+                new ToState(messages.get("Restart"), Pomodoro.class),
+                new ToState(messages.get("Short break"), ShortBreak.class),
+                new ToState(messages.get("Long break"), LongBreak.class)
+        };
+    }
 
 }

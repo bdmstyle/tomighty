@@ -31,7 +31,7 @@ import org.tomighty.ui.theme.Colors;
 import org.tomighty.ui.theme.colors.Red;
 
 public class Pomodoro extends TimerSupport {
-	
+
 	@Inject
     private Options options;
 	

@@ -53,7 +53,7 @@ public class Window extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocation(100, 100);
 		setResizable(false);
-		setSize(180, 115);
+		setSize(152, 100);
 		setUndecorated(true);
 		addWindowFocusListener(new HideWindowWhenLosingFocus());
 		addMouseListener(dragger);

@@ -8,4 +8,5 @@ public interface Timer {
 
     void interrupt();
 
+    Time getInterruptedTime();
 }
