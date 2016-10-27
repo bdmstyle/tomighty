@@ -51,7 +51,7 @@ public class TrayManager implements Runnable {
 		bus.subscribe(new RemoveTimeFromTray(), TimeOnTrayConfigChanged.class);
 		trayIcon = new TrayIcon(icons.tomato());
 		trayIcon.addMouseListener(new TrayListener());
-		trayIcon.setImageAutoSize(true);
+		trayIcon.setImageAutoSize(false);
 	}
 
 	@Override
